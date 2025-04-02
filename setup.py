@@ -11,7 +11,7 @@ setup(
     entry_points={
         "console_scripts": [
            # "run_kr_abundance=Metagenomics_pipeline.scripts.run_kr_abundance:main",
-             "un_metagenomics_pl.py=scripts.run_metagenomics_pl.py:main",
+             "un_metagenomics_pl.py=scripts.run_metagenomics_pl:main",
         ],
     },
     author="Harouna",
