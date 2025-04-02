@@ -8,10 +8,8 @@ from Metagenomics_pipeline.ref_based_assembly import ref_based
 from Metagenomics_pipeline.deno_ref_assembly2 import deno_ref_based
 import logging
 
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-
 
 def create_sample_id_df(input_dir):
     """
@@ -28,21 +26,6 @@ def create_sample_id_df(input_dir):
 
     sample_id_df = pd.DataFrame(sample_ids, columns=["Sample_IDs"])
     return sample_id_df
-
-
-def read_contig_files(contig_file):
-    """
-    Reads a file containing paths to contig fasta files and returns a list of file paths.
-    """
-    contig_paths = []
-    try:
-        with open(contig_file, 'r') as f:
-            contig_paths = [line.strip() for line in f.readlines() if line.strip()]
-    except FileNotFoundError:
-        logging.error(f"Contig file '{contig_file}' not found.")
-        sys.exit(1)
-    return contig_paths
-
 
 def main():
     parser = argparse.ArgumentParser(description="Pipeline for Trimmomatic trimming, Bowtie2 host depletion (optional), and Kraken2 taxonomic classification.")
@@ -64,6 +47,7 @@ def main():
     parser.add_argument("--max_read_count", type=int, default=5000000000, help="Maximum number of read counts")
     parser.add_argument("--run_ref_base", action="store_true", help="Run the additional processing pipeline for each taxon (BWA, Samtools, BCFtools, iVar)")
     parser.add_argument("--run_deno_ref", action="store_true", help="Run the additional processing pipeline for each taxon (BWA, Samtools, BCFtools, iVar)")
+    parser.add_argument("--use_assembly", action="store_true", help="Perform de novo assembly before classification.")
     
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
@@ -89,7 +73,8 @@ def main():
 
         if reverse:
             logging.info(f"Processing sample {base_name} with paired files.")
-            process_sample(forward, reverse, base_name, args.bowtie2_index, args.kraken_db, args.output_dir, args.threads, run_bowtie, args.use_precomputed_reports)
+            # Pass `use_assembly` argument to the `process_sample` function
+            process_sample(forward, reverse, base_name, args.bowtie2_index, args.kraken_db, args.output_dir, args.threads, run_bowtie, args.use_precomputed_reports, args.use_assembly)
         else:
             logging.warning(f"No matching R2 file found for {base_name}. Skipping.")
 
@@ -120,10 +105,8 @@ def main():
         logging.info(f"Starting reference-based pipeline.")
         ref_based(df, run_bowtie, args.output_dir)
     if args.run_deno_ref:
-        logging.info(f"Starting ref denovo asseml pipeline.")
-        deno_ref_based(df, args.output_dir,args.output_dir,run_bowtie)
-
-
+        logging.info(f"Starting reference denovo assembly pipeline.")
+        deno_ref_based(df, args.output_dir, args.output_dir, run_bowtie)
 
 
 if __name__ == "__main__":
