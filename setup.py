@@ -12,7 +12,7 @@ setup(
     "console_scripts": [
         "run_metagenomics_pl=Metagenomics_pipeline4_V0.scripts.run_metagenomics_pl:main",
     ],
-}
+},
     author="Harouna",
     author_email="harounasoum17@gmail.com",
     description="A bioinformatics pipeline for trimming, host depletion, and taxonomic classification",
