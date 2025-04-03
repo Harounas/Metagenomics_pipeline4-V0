@@ -53,7 +53,7 @@ def process_sample(forward, reverse, base_name, bowtie2_index, kraken_db, output
             contigs_file = run_spades(unmapped_r1, unmapped_r2, base_name, output_dir, threads)
             print(f"Running Kraken2 on assembled contigs for sample {base_name}")
             # Run Kraken2 on the assembled contigs
-            kraken_report = run_kraken2(contigs_file, None, base_name, kraken_db, output_dir, threads, input_type="contigs")
+            kraken_report = run_kraken2(contigs_file, None, base_name, kraken_db, output_dir, threads)
         else:
             # Run Kraken2 on raw (unassembled) reads
             print(f"Running Kraken2 on raw reads for sample {base_name}")
