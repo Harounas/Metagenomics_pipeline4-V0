@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.io as pio
 import os
 from .trimmomatic import run_trimmomatic
+from .metaspades import run_spades
 from .bowtie2 import run_bowtie2
 from .kraken2 import run_kraken2
 import distinctipy
