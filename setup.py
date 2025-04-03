@@ -10,7 +10,7 @@ setup(
     ],
     entry_points={
     "console_scripts": [
-        "run_metagenomics_pl=Metagenomics_pipeline4_V0.scripts.run_metagenomics_pl:main",
+        "run_metagenomics_pl=scripts.run_metagenomics_pl:main",
     ],
 },
     author="Harouna",
