@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="Metagenomics_pipeline4-V0",
+    name="Metagenomics_pipeline4_V0",
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
@@ -11,7 +11,7 @@ setup(
     entry_points={
         "console_scripts": [
            # "run_kr_abundance=Metagenomics_pipeline.scripts.run_kr_abundance:main",
-             "run_metagenomics_pl=Metagenomics_pipeline4-V0.scripts.run_metagenomics_pl:main",
+             "run_metagenomics_pl=Metagenomics_pipeline4_V0.scripts.run_metagenomics_pl:main",
         ],
     },
     author="Harouna",
@@ -19,7 +19,7 @@ setup(
     description="A bioinformatics pipeline for trimming, host depletion, and taxonomic classification",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/Harounas/Metagenomics_pipeline4-V0.git",
+    url="https://github.com/Harounas/Metagenomics_pipeline4_V0.git",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
