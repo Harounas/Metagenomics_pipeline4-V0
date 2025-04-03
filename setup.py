@@ -9,11 +9,10 @@ setup(
         "plotly", "kaleido",'distinctipy','numpy',
     ],
     entry_points={
-        "console_scripts": [
-           # "run_kr_abundance=Metagenomics_pipeline.scripts.run_kr_abundance:main",
-             "run_metagenomics_pl=scripts.run_metagenomics_pl:main",
-        ],
-    },
+    "console_scripts": [
+        "run_metagenomics_pl=Metagenomics_pipeline4_V0.scripts.run_metagenomics_pl:main",
+    ],
+}
     author="Harouna",
     author_email="harounasoum17@gmail.com",
     description="A bioinformatics pipeline for trimming, host depletion, and taxonomic classification",
