@@ -16,7 +16,7 @@ run_kr_abundance --input_dir /home/harouna/ARSNACAdata/bamfiles/mypipeline --out
 
 
   # Installation
-  * git clone https://github.com/Harounas/Metagenomics_pipeline.git
+  * git clone https://github.com/Harounas/Metagenomics_pipeline4-V0.git
   * cd Metagenomics_pipeline
   * sudo pip install -e .
   * conda install -c bioconda trimmomatic
