@@ -3,10 +3,10 @@ import glob
 import argparse
 import pandas as pd
 import sys
+import logging
 from Metagenomics_pipeline.kraken_abundance_pipeline import process_sample, aggregate_kraken_results, generate_abundance_plots
 from Metagenomics_pipeline.ref_based_assembly import ref_based
 from Metagenomics_pipeline.deno_ref_assembly2 import deno_ref_based
-import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
