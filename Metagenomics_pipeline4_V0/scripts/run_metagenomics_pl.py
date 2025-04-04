@@ -57,8 +57,10 @@ def main():
         logging.error(f"Kraken database directory '{args.kraken_db}' not found.")
         sys.exit(1)
 
+    # Determine whether Bowtie2 should be run based on args
     run_bowtie = not args.no_bowtie2 and args.bowtie2_index is not None
 
+    # Process each sample
     for forward in glob.glob(os.path.join(args.input_dir, "*_R1*.fastq*")):
         base_name = os.path.basename(forward).replace("_R1_001.fastq.gz", "").replace("_R1_001.fastq", "")
         base_name = base_name.replace("_R1.fastq.gz", "").replace("_R1.fastq", "").replace("R1.fastq.gz", "").replace("R1.fastq", "").replace("_R1_001", "").replace("_R1", "")
@@ -78,6 +80,7 @@ def main():
         else:
             logging.warning(f"No matching R2 file found for {base_name}. Skipping.")
 
+    # Handle metadata and Kraken results
     if args.no_metadata:
         sample_id_df = create_sample_id_df(args.input_dir)
         logging.info("Using sample IDs as metadata.")
@@ -89,6 +92,7 @@ def main():
             sys.exit(1)
         merged_tsv_path = aggregate_kraken_results(args.output_dir, metadata_file=args.metadata_file, read_count=args.read_count, max_read_count=args.max_read_count)
 
+    # Generate abundance plots
     if merged_tsv_path and os.path.isfile(merged_tsv_path):
         if args.virus:
             logging.info("Generating viral abundance plots.")
@@ -97,10 +101,12 @@ def main():
             logging.info("Generating bacterial abundance plots.")
             generate_abundance_plots(merged_tsv_path, args.top_N, args.col_filter, args.pat_to_keep)
 
+    # Filter for virus-related rows
     df = pd.read_csv(merged_tsv_path, sep='\t')
     df = df[df['Scientific_name'].str.contains('virus', case=False, na=False)]
     df = df.apply(lambda col: col.map(lambda x: x.strip() if isinstance(x, str) else x))
 
+    # Run additional reference-based or denovo assembly pipeline if specified
     if args.run_ref_base:
         logging.info(f"Starting reference-based pipeline.")
         ref_based(df, run_bowtie, args.output_dir)
