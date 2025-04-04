@@ -14,23 +14,7 @@ import matplotlib.pyplot as plt
 
 def process_sample(forward, reverse, base_name, bowtie2_index, kraken_db, output_dir, threads, run_bowtie, use_precomputed_reports, use_assembly):
     """
-    Processes a metagenomic sample by running quality control, optional host depletion, 
-    de novo assembly (if enabled), and taxonomic classification.
-
-    Parameters:
-    - forward (str): Path to forward reads.
-    - reverse (str): Path to reverse reads.
-    - base_name (str): Sample identifier.
-    - bowtie2_index (str): Path to Bowtie2 index for host genome depletion.
-    - kraken_db (str): Path to Kraken2 database.
-    - output_dir (str): Directory for output files.
-    - threads (int): Number of CPU threads.
-    - run_bowtie (bool): Whether to perform host read depletion.
-    - use_precomputed_reports (bool): Whether to use precomputed Kraken2 reports.
-    - use_assembly (bool): Whether to perform de novo assembly before classification.
-
-    Returns:
-    - str: Path to the Kraken2 classification report.
+    Processes a metagenomic sample with optional assembly.
     """
     try:
         if use_precomputed_reports:
@@ -39,31 +23,31 @@ def process_sample(forward, reverse, base_name, bowtie2_index, kraken_db, output
                 raise FileNotFoundError(f"Precomputed Kraken2 report not found: {kraken_report}")
             return kraken_report
 
-        # Step 1: Quality control with Trimmomatic
+        # Step 1: Run Trimmomatic
         trimmed_forward, trimmed_reverse = run_trimmomatic(forward, reverse, base_name, output_dir, threads)
-
-        # Step 2: Host depletion (if enabled)
+        
+        # Step 2: Optional host depletion
         if run_bowtie:
             unmapped_r1, unmapped_r2 = run_bowtie2(trimmed_forward, trimmed_reverse, base_name, bowtie2_index, output_dir, threads)
         else:
             unmapped_r1, unmapped_r2 = trimmed_forward, trimmed_reverse
 
-        # Step 3: De novo assembly if use_assembly is True
+        # Step 3: Perform assembly if requested
         if use_assembly:
-            # Perform de novo assembly with SPAdes
+            logging.info(f"Performing de novo assembly for sample {base_name}")
+            # Run SPAdes assembly
             contigs_file = run_spades(unmapped_r1, unmapped_r2, base_name, output_dir, threads)
-            print(f"Running Kraken2 on assembled contigs for sample {base_name}")
             # Run Kraken2 on the assembled contigs
             kraken_report = run_kraken2(contigs_file, None, base_name, kraken_db, output_dir, threads)
         else:
-            # Run Kraken2 on raw (unassembled) reads
-            print(f"Running Kraken2 on raw reads for sample {base_name}")
+            logging.info(f"Running Kraken2 directly on reads for sample {base_name}")
+            # Run Kraken2 on the raw reads
             kraken_report = run_kraken2(unmapped_r1, unmapped_r2, base_name, kraken_db, output_dir, threads)
 
         return kraken_report
 
     except Exception as e:
-        print(f"Error processing sample {base_name}: {e}")
+        logging.error(f"Error processing sample {base_name}: {e}")
         return None
 
 def generate_sample_ids_csv(kraken_dir):
