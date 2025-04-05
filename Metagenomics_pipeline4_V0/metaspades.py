@@ -19,7 +19,7 @@ def run_spades(forward, reverse, base_name, output_dir, threads):
         print(f"SPAdes assembly already exists for {base_name}. Using existing contigs.")
         return contigs_output
 
-    spades_cmd = f"spades.py -1 {forward} -2 {reverse} -o {os.path.join(output_dir, base_name)} -t {threads}"
+    spades_cmd = f"metaspades.py -1 {forward} -2 {reverse} -o {os.path.join(output_dir, base_name)} -t {threads}"
     os.system(spades_cmd)
 
     if os.path.exists(contigs_output):
