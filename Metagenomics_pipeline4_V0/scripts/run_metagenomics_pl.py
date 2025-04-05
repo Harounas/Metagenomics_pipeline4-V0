@@ -73,11 +73,11 @@ def main():
 
         reverse = next((f for f in reverse_candidates if os.path.isfile(f)), None)
 
-        if reverse and not use_assembly:
+        if reverse and not args.use_assembly:
             logging.info(f"Processing sample {base_name} with paired files.")
             # Pass `use_assembly` argument to the `process_sample` function
             process_sample(forward, reverse, base_name, args.bowtie2_index, args.kraken_db, args.output_dir, args.threads, run_bowtie, args.use_precomputed_reports, args.use_assembly)
-        elif use_assembly:
+        elif args.use_assembly:
             process_sample(forward, reverse, base_name, args.bowtie2_index, args.kraken_db, args.output_dir, args.threads, run_bowtie, args.use_precomputed_reports, args.use_assembly)
         else:
             logging.warning(f"No matching R2 file found for {base_name}. Skipping.")
