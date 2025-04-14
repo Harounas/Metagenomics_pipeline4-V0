@@ -13,6 +13,7 @@ def run_kraken2(forward, reverse, base_name, kraken_db, output_dir, threads):
             "--report", kraken_report,
             "--output", kraken_output,
             "--threads", str(threads),
+            "--use-names",
             forward  # The contigs file (forward)
         ]
     else:
@@ -22,6 +23,7 @@ def run_kraken2(forward, reverse, base_name, kraken_db, output_dir, threads):
             "--report", kraken_report,
             "--output", kraken_output,
             "--threads", str(threads),
+            "--use-names",
             "--paired", "--gzip-compressed", forward, reverse
         ]
 
