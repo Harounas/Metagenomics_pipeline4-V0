@@ -60,17 +60,20 @@ def process_sample(forward, reverse, base_name, bowtie2_index, kraken_db, output
                 logging.info(f"Performing de novo assembly for sample {base_name}")
                 contigs_file = run_spades(unmapped_r1, unmapped_r2, base_name, output_dir, threads)
 
-            kraken_input = contigs_file
+            kraken_input = contigs_file  # string path to fasta
         else:
-            kraken_input = (unmapped_r1, unmapped_r2)
-            logging.info(f"Running Kraken2 directly on reads for sample {base_name}")
+            kraken_input = (unmapped_r1, unmapped_r2)  # tuple of reads
 
         # Step 4: Run Kraken2
         kraken_report = os.path.join(output_dir, f"{base_name}_kraken_report.txt")
         if not os.path.exists(kraken_report):
+            if isinstance(kraken_input, tuple):
+                input_r1, input_r2 = kraken_input
+            else:
+                input_r1, input_r2 = kraken_input, None  # contigs.fasta, no R2
+
             kraken_report = run_kraken2(
-                kraken_input[0], kraken_input[1] if isinstance(kraken_input, tuple) else None,
-                base_name, kraken_db, output_dir, threads
+                input_r1, input_r2, base_name, kraken_db, output_dir, threads
             )
         else:
             logging.info(f"Using existing Kraken2 report for sample {base_name}")
