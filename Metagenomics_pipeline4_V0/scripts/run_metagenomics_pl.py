@@ -101,7 +101,8 @@ def process_samples(args):
             threads=args.threads,
             run_bowtie=run_bowtie,
             use_precomputed_reports=args.use_precomputed_reports,
-            use_assembly=args.use_assembly
+            use_assembly=args.use_assembly,
+            skip_preprocessing=args.skip_preprocessing
         )
 
 def handle_metadata(args):
@@ -158,6 +159,7 @@ def main():
                        help="Run reference-based assembly pipeline for each taxon.")
     parser.add_argument("--run_deno_ref", action="store_true", 
                        help="Run denovo reference assembly pipeline for each taxon.")
+    parser.add_argument('--skip_preprocessing', action='store_true', help='Skip trimming, host depletion, and Kraken2 on raw reads')
     
     # Filtering arguments
     parser.add_argument("--col_filter", type=str, nargs='+', 
